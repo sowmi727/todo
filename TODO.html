@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do App (Create / Insert / Delete)</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f6f6f6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 60px;
+  }
+  .todo-container {
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 350px;
+  }
+  h2 {
+    text-align: center;
+  }
+  input, button {
+    margin: 5px 0;
+    padding: 8px;
+    font-size: 14px;
+  }
+  #taskInput, #insertPos {
+    width: 90%;
+    margin-bottom: 10px;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 15px;
+  }
+  li {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .delete {
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <div class="todo-container">
+    <h2>📝 To-Do App</h2>
+
+    <input type="text" id="taskInput" placeholder="Enter new task">
+    <br>
+    <button onclick="createTask()">Create Task</button>
+
+    <hr>
+    <input type="number" id="insertPos" placeholder="Insert position (optional)">
+    <button onclick="insertTask()">Insert Task</button>
+
+    <hr>
+    <ul id="taskList"></ul>
+  </div>
+
+<script>
+  const taskList = document.getElementById('taskList');
+  const taskInput = document.getElementById('taskInput');
+  const insertPos = document.getElementById('insertPos');
+
+  let tasks = [];
+
+  function renderTasks() {
+    taskList.innerHTML = "";
+    tasks.forEach((task, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${index + 1}. ${task} <span class="delete" onclick="deleteTask(${index})">✖</span>`;
+      taskList.appendChild(li);
+    });
+  }
+
+  function createTask() {
+    const newTask = taskInput.value.trim();
+    if (!newTask) return alert("Please enter a task!");
+    tasks.push(newTask);
+    taskInput.value = "";
+    renderTasks();
+  }
+
+  function insertTask() {
+    const newTask = taskInput.value.trim();
+    const pos = parseInt(insertPos.value);
+    if (!newTask) return alert("Please enter a task!");
+    if (pos && pos > 0 && pos <= tasks.length + 1) {
+      tasks.splice(pos - 1, 0, newTask);
+    } else {
+      tasks.push(newTask); // fallback if position invalid
+    }
+    taskInput.value = "";
+    insertPos.value = "";
+    renderTasks();
+  }
+
+  function deleteTask(index) {
+    if (confirm("Delete this task?")) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+  }
+</script>
+</body>
+</html>
